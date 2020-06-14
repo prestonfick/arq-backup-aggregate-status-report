@@ -1,0 +1,9 @@
+{
+    "cronScheduleString": "0 0 4 * * 0",
+    "arqStatusMailLabel": "arqbackup",
+    "arqStatusSenderEmail": "update-with-your-email@gmail.com",
+    "arqStatusSenderPassword": "update-with-your-gmail-app-password",
+    "arqStatusRecipientEmail": "update-with-your-email@gmail.com",
+    "daysToWarn": 14,
+    "daysToError": 30
+}

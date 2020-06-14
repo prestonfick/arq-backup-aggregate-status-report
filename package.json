@@ -1,0 +1,20 @@
+{
+  "name": "gmail-nodejs-quickstart",
+  "version": "1.0.0",
+  "description": "A simple Node.js command-line application that makes requests to the Gmail API.",
+  "private": true,
+  "dependencies": {
+    "cli-progress": "^3.8.2",
+    "googleapis": "^39.2.0",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.4.8"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=6.4.0"
+  },
+  "scripts": {
+    "start": "node ."
+  },
+  "license": "Apache-2.0"
+}
