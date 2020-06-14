@@ -347,7 +347,7 @@ function processArqBackupMessageEmails(emailMessages) {
   htmlEmailStatusString = 'Created: ' + today.toDateString() + '<br>' + htmlEmailStatusString;
   htmlEmailStatusString = '<img src="cid:arq-icon.png"/><br><br><b>Arq Backup Status Report</b><br>' + htmlEmailStatusString;
 
-  htmlEmailStatusString += '<i>Report provided by arq-email-notification-status-report</i>';
+  htmlEmailStatusString += '<i>Report provided by arq-backup-aggregate-status-report</i>';
 
   //console.log(htmlEmailStatusString);
 
