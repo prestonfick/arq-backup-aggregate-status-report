@@ -68,6 +68,9 @@ function arqEmailNotificationStatusReportService() {
     const arqBackupStatusString = fs.readFileSync(ARQ_BACKUP_DATA_PATH);
     arqBackupStatusObject = JSON.parse(arqBackupStatusString);
     arqBackupStatusObject.backupPlanMap = new Map(arqBackupStatusObject.backupPlanMap);
+    if (!arqBackupStatusObject.ignoreList) {
+      arqBackupStatusObject.ignoreList = [];
+    }
   } catch (err) {
     console.log('Error loading backup status file:', err);
     console.log(ARQ_BACKUP_DATA_PATH + ' will be created.')
@@ -309,7 +312,7 @@ function processArqBackupMessageEmails(emailMessages) {
     // Show a green status otherwise for successful backup status
     backupStatus.totalBackups++;
     let backupStatusHealthEmoji = '';
-    if (arqBackupStatusObject.ignoreList.includes(backupPlanItem)) {
+    if (arqBackupStatusObject.ignoreList && arqBackupStatusObject.ignoreList.includes(backupPlanItem)) {
         backupStatus.totalIgnoredBackups++;
         backupStatusHealthEmoji = '〰️';
     } else if (timeSinceLastBackup >= (backupPlanObject.daysToError * dayMs) ||
