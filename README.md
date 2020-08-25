@@ -70,3 +70,9 @@ To start the application, run `npm start`.
 ### OAuth
 
 When running this the first time, it will require OAuth registration, follow the prompts to obtain a token to allow access to Gmail, as configured above. This requires visiting the site dispalyed in your terminal, granting access to your Gmail account, then supplying the token to the CLI input in the terminal. Once this works, a token.json is created next to the application for usage as it runs over time.
+
+## Features
+
+### Ignore Existing Backups
+
+If you have backups that exist as part of your report but stop backing they can be configured to be ignored. Add the full name of the backup string to the `ignoreList` list in the `arq-backup-status.json` file. This will still report the last time backed up but will not affect the report with a warning or error based on the configured limits.

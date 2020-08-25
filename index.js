@@ -48,7 +48,8 @@ const weeksMs = 7 * dayMs;
 // the new backup status. This object gets written to arq-backup-status.json.
 var arqBackupStatusObject = {
   lastBackupStatusDate: null,
-  backupPlanMap: new Map()
+  backupPlanMap: new Map(),
+  ignoreList: []
 };
 
 // Setup a cron job to run this on the schedule defined in config.json
@@ -262,7 +263,8 @@ function processArqBackupMessageEmails(emailMessages) {
     errors: 0,
     warnings: 0,
     successes: 0,
-    totalBackups: 0
+    totalBackups: 0,
+    totalIgnoredBackups: 0
   };
 
   // This will hold the entire HTML email that will get sent as the status report body
@@ -307,7 +309,10 @@ function processArqBackupMessageEmails(emailMessages) {
     // Show a green status otherwise for successful backup status
     backupStatus.totalBackups++;
     let backupStatusHealthEmoji = '';
-    if (timeSinceLastBackup >= (backupPlanObject.daysToError * dayMs) ||
+    if (arqBackupStatusObject.ignoreList.includes(backupPlanItem)) {
+        backupStatus.totalIgnoredBackups++;
+        backupStatusHealthEmoji = '〰️';
+    } else if (timeSinceLastBackup >= (backupPlanObject.daysToError * dayMs) ||
         (backupPlanObject.mostRecentErrors != 0)) {
           backupStatus.errors++;
           backupStatusHealthEmoji = '❌';
@@ -342,6 +347,9 @@ function processArqBackupMessageEmails(emailMessages) {
     statusOverview += '<li>Errors: ' + backupStatus.errors + '</li>';
     statusHealthEmoji = '❌ ';
   }
+  if (backupStatus.totalIgnoredBackups > 0) {
+    statusOverview += '<li>Total Ignored Backups: ' + backupStatus.totalIgnoredBackups + '</li>';
+  }
   statusOverview += '</ul></b><br><b>Individual Backup Information</b><hr>';
   statusOverview = '<h1>' + statusHealthEmoji + '</h1>' + statusOverview;
 
@@ -360,7 +368,8 @@ function processArqBackupMessageEmails(emailMessages) {
   // Perform a bit of separation here to properly write out the Map object
   let arqBackupStatusObjectString = '{';
   arqBackupStatusObjectString += '"lastBackupStatusDate":' + JSON.stringify(arqBackupStatusObject.lastBackupStatusDate) + ',';
-  arqBackupStatusObjectString += '"backupPlanMap":' + JSON.stringify([...arqBackupStatusObject.backupPlanMap]);
+  arqBackupStatusObjectString += '"backupPlanMap":' + JSON.stringify([...arqBackupStatusObject.backupPlanMap]) + ',';
+  arqBackupStatusObjectString += '"ignoreList":' + JSON.stringify(arqBackupStatusObject.ignoreList);
   arqBackupStatusObjectString += '}';
 
   fs.writeFile(ARQ_BACKUP_DATA_PATH, arqBackupStatusObjectString, (err) => {
