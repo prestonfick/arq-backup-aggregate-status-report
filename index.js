@@ -30,12 +30,14 @@ const SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 // time.
 const TOKEN_PATH = 'token.json';
 const CREDENTIALS_PATH = 'credentials.json';
-const ARQ_BAKCUP_DATA_PATH = 'arq-backup-status.json';
+const ARQ_BACKUP_DATA_PATH = 'arq-backup-status.json';
 
 var config = require('./config.json');
 
+// Hold current date
+let today = new Date;
+
 // Useful time objects
-const today = new Date;
 const secondMs = 1000;
 const minuteMs = 60 * secondMs;
 const hourMs = 60 * minuteMs;
@@ -62,12 +64,12 @@ arqEmailNotificationStatusReportService();
 // Load previous backup status record from a local file, if it exists, if not create it
 function arqEmailNotificationStatusReportService() {
   try {
-    const arqBackupStatusString = fs.readFileSync(ARQ_BAKCUP_DATA_PATH);
+    const arqBackupStatusString = fs.readFileSync(ARQ_BACKUP_DATA_PATH);
     arqBackupStatusObject = JSON.parse(arqBackupStatusString);
     arqBackupStatusObject.backupPlanMap = new Map(arqBackupStatusObject.backupPlanMap);
   } catch (err) {
     console.log('Error loading backup status file:', err);
-    console.log(ARQ_BAKCUP_DATA_PATH + ' will be created.')
+    console.log(ARQ_BACKUP_DATA_PATH + ' will be created.')
   }
 
   // Load client secrets from a local file
@@ -135,6 +137,7 @@ function getNewToken(oAuth2Client, callback) {
  */
 function startArqBackupMailCheck(auth) {
   console.log('Starting Arq Backup Mail Check');
+  today = new Date();
   let labelSearchString = 'label:' + config.arqStatusMailLabel;
   if (arqBackupStatusObject.lastBackupStatusDate === null) {
     console.log('First Backup, getting all existing Arq Backup status mails');
@@ -360,9 +363,9 @@ function processArqBackupMessageEmails(emailMessages) {
   arqBackupStatusObjectString += '"backupPlanMap":' + JSON.stringify([...arqBackupStatusObject.backupPlanMap]);
   arqBackupStatusObjectString += '}';
 
-  fs.writeFile(ARQ_BAKCUP_DATA_PATH, arqBackupStatusObjectString, (err) => {
+  fs.writeFile(ARQ_BACKUP_DATA_PATH, arqBackupStatusObjectString, (err) => {
     if (err) return console.log('Error updating backup status file:', err);
-    console.log('Updated backup status file: ' + ARQ_BAKCUP_DATA_PATH);
+    console.log('Updated backup status file: ' + ARQ_BACKUP_DATA_PATH);
   });
   
   //TODO - separate out plaintext from HTML, for now HTML is sent for both
