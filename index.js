@@ -310,13 +310,13 @@ function processArqBackupMessageEmails(emailMessages) {
     if (timeSinceLastBackup >= (backupPlanObject.daysToError * dayMs) ||
         (backupPlanObject.mostRecentErrors != 0)) {
           backupStatus.errors++;
-          backupStatusHealthEmoji = '🔴';
+          backupStatusHealthEmoji = '❌';
     } else if (timeSinceLastBackup >= (backupPlanObject.daysToWarn * dayMs)) {
       backupStatus.warnings++;
-      backupStatusHealthEmoji = '🟡';
+      backupStatusHealthEmoji = '⚠️';
     } else {
       backupStatus.successes++;
-      backupStatusHealthEmoji = '🟢';
+      backupStatusHealthEmoji = '✅';
     }
     backupStatusString = backupStatusHealthEmoji + backupStatusString;
 
