@@ -1,7 +1,7 @@
 {
-  "name": "gmail-nodejs-quickstart",
+  "name": "arq-backup-aggregate-status-report",
   "version": "1.0.0",
-  "description": "A simple Node.js command-line application that makes requests to the Gmail API.",
+  "description": "Node.js application that reads Arq Backup notifications from Gmail and aggregates and them in to a single weekly status report email",
   "private": true,
   "dependencies": {
     "cli-progress": "^3.8.2",
